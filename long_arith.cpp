@@ -64,18 +64,18 @@ BigInteger::BigInteger(string& str) {
 }
 
 BigInteger::BigInteger(signed long long& digits) {
-        if (digits < 0) {
-            this->is_negative = true;
-            digits = -digits;
-        }
-        else {
-            this->is_negative = false;
-        }
+    if (digits < 0) {
+        this->is_negative = true;
+        digits = -digits;
+    }
+    else {
+        this->is_negative = false;
+    }
 
-        do {
-            this->digits.push_back(digits % BigInteger::BASE);
-            digits /= BigInteger::BASE;
-        } while (digits != 0);
+    do {
+        this->digits.push_back(digits % BigInteger::BASE);
+        digits /= BigInteger::BASE;
+    } while (digits != 0);
 }
 
 BigInteger::BigInteger(unsigned long long& digits) {
@@ -250,17 +250,17 @@ const BigInteger operator *(const BigInteger& left, const BigInteger& right) {
     uint64_t right_size = right.digits.size();
     result.digits.resize(left_size + right_size);
 
-    int carry;
-    long long cur;
+    uint32_t carry;
+    uint64_t cur;
     for (uint64_t i = 0; i < left_size; ++i) {
         carry = 0;
         for (uint64_t j = 0; j < right_size || carry != 0; ++j) {
-            cur = result.digits[i + j] + left.digits[i] * 1LL * (j < right_size ? right.digits[j] : 0) + carry;
-            result.digits[i + j] = static_cast<int>(cur % BigInteger::BASE);
-            carry = static_cast<int>(cur / BigInteger::BASE);
+            cur = result.digits[i + j] + ((uint64_t)left.digits[i]) * (j < right_size ? right.digits[j] : 0) + carry;
+            result.digits[i + j] = static_cast<uint16_t>(cur % BigInteger::BASE);
+            carry = static_cast<uint16_t>(cur / BigInteger::BASE);
         }
     }
-    // не забудем про знак
+
     result.is_negative = left.is_negative != right.is_negative;
     result.RemoveLeadZeros();
     return result;
