@@ -13,28 +13,33 @@ public:
     BigInteger(int64_t& digits);
     BigInteger(uint64_t& digits);
     BigInteger(int);
+    uint64_t GetSize() const;
+    friend ostream& operator<<(ostream& os, const BigInteger& bi);
+    uint16_t operator[](uint64_t i) const;
+    uint16_t& operator[](uint64_t i);
     void RemoveLeadZeros();
-    friend bool operator==(const BigInteger& left, const BigInteger& right);
-    friend bool operator!=(const BigInteger& left, const BigInteger& right);
-    friend bool operator<(const BigInteger& left, const BigInteger& right);
-    friend bool operator>(const BigInteger& left, const BigInteger& right);
-    const BigInteger operator+() const;
-    const BigInteger operator-() const;
-    friend const BigInteger operator+(BigInteger left, const BigInteger& right);
-    friend const BigInteger operator-(BigInteger left, const BigInteger& right);
+    friend bool operator ==(const BigInteger& left, const BigInteger& right);
+    friend bool operator !=(const BigInteger& left, const BigInteger& right);
+    friend bool operator <(const BigInteger& left, const BigInteger& right);
+    friend bool operator >(const BigInteger& left, const BigInteger& right);
+    const BigInteger operator +() const;
+    const BigInteger operator -() const;
+    friend const BigInteger operator +(BigInteger left, const BigInteger& right);
+    friend const BigInteger operator -(BigInteger left, const BigInteger& right);
+    BigInteger& operator =(const BigInteger& value);
     BigInteger& operator +=(const BigInteger& value);
     BigInteger& operator -=(const BigInteger& value);
     BigInteger& operator *=(const BigInteger& value);
     BigInteger& operator /=(const BigInteger& value);
     BigInteger& operator +=(const int& value);
     BigInteger& operator -=(const int& value);
-    const BigInteger operator++(int);
-    const BigInteger operator++();
-    const BigInteger operator--(int);
-    const BigInteger operator--();
-    friend const BigInteger operator*(const BigInteger& left, const BigInteger& right);
-    friend const BigInteger operator/(const BigInteger& left, const BigInteger& right);
-    BigInteger& operator/=(const BigInteger& value);
+    const BigInteger operator ++(int);
+    const BigInteger operator ++();
+    const BigInteger operator --(int);
+    const BigInteger operator --();
+    friend const BigInteger operator *(const BigInteger& left, const BigInteger& right);
+    friend const BigInteger operator /(const BigInteger& left, const BigInteger& right);
+    BigInteger& operator /=(const BigInteger& value);
     void shift_right();
     friend const BigInteger operator %(const BigInteger& left, const BigInteger& right);
     bool odd() const;
@@ -45,9 +50,34 @@ public:
 
 private:
 	static const uint64_t BASE = 1000000000;
-	std::vector<uint16_t> digits;
 	bool is_negative;
+    std::vector<uint16_t> digits;
 };
+
+uint64_t BigInteger::GetSize() const {
+    return this->digits.size();
+}
+
+ostream& operator <<(ostream& os, const BigInteger& b) {
+    if (b.digits.empty())
+        os << 0;
+    else {
+        if (b.is_negative)
+            os << '-';
+
+        os << b.digits.back();
+        char old_fill = os.fill('0');
+
+        for (uint64_t i = static_cast<uint64_t>(b.digits.size()) - 2; i >= 0; --i) {
+            os << b.digits[i];
+        }
+        os.fill(old_fill);
+    }
+    return os;
+}
+
+uint16_t BigInteger::operator [](uint64_t i) const { return this->digits[i]; };
+uint16_t& BigInteger::operator [](uint64_t i) { return this->digits[i]; };
 
 BigInteger::BigInteger() {
     this->is_negative = false;
@@ -230,6 +260,10 @@ const BigInteger operator-(BigInteger left, const BigInteger& right) {
     return left;
 }
 
+BigInteger& BigInteger::operator=(const BigInteger& value) {
+    return *this = value;
+}
+
 BigInteger& BigInteger::operator+=(const BigInteger& value) {
     return *this = (*this + value);
 }
@@ -356,7 +390,7 @@ const BigInteger BigInteger::pow(BigInteger n) const {
     return result;
 }
 
-void resultOperation(string& line1, string& line2, char& operation, vector<uint16_t>& res){
+void resultOperation(string& line1, string& line2, char& operation, BigInteger& res){
     string l1 = line1;
     string l2 = line1;
     BigInteger left(line1);
@@ -396,15 +430,15 @@ void resultOperation(string& line1, string& line2, char& operation, vector<uint1
 int main() {
     string line1;
     string line2;
-    std::vector<uint16_t> result;
     char operation;
+    BigInteger result;
 
      while (true) {
         cin >> line1;
         cin >> line2;
         cin >> operation;
         resultOperation(line1, line2, operation, result);
-        cout << result.size();
+        cout << result;
     }
     return 0;
 }
