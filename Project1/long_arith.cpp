@@ -30,15 +30,14 @@ public:
     friend const BigInteger operator *(const BigInteger& left, const BigInteger& right);
     friend const BigInteger operator /(const BigInteger& left, const BigInteger& right);
     void shift_right();
-    friend const BigInteger operator %(const BigInteger& left, const BigInteger& right);
     bool odd() const;
     const BigInteger operator^(BigInteger n) const;
 
-    class DivideByZero: public std::exception {  };
+    class DivideByZero : public std::exception {  };
 
 private:
-	static const uint64_t BASE = 100000;
-	bool is_negative;
+    static const uint64_t BASE = 100000;
+    bool is_negative;
     std::vector<uint32_t> digits;
 };
 
@@ -63,7 +62,7 @@ BigInteger::BigInteger() {
 }
 
 BigInteger::BigInteger(string& str) {
-    if (str.length() == 0){
+    if (str.length() == 0) {
         this->is_negative = false;
         return;
     }
@@ -71,14 +70,16 @@ BigInteger::BigInteger(string& str) {
     if (str[0] == '-') {
         this->is_negative = true;
         str = str.substr(1);
-    } else {
+    }
+    else {
         this->is_negative = false;
     }
 
     for (int64_t i = str.length(); i > 0; i = i - 9) {
-        if (i <= 9){
+        if (i <= 9) {
             this->digits.push_back(atoi(str.substr(0, i).c_str()));  // strtoul string -> uint64_t
-        } else {
+        }
+        else {
             this->digits.push_back(atoi(str.substr(i - 9, 9).c_str()));
         }
     }
@@ -104,7 +105,7 @@ BigInteger::BigInteger(uint64_t& digits) {
     this->is_negative = false;
     do {
         this->digits.push_back(digits % BigInteger::BASE);
-            digits = digits / BigInteger::BASE;
+        digits = digits / BigInteger::BASE;
     } while (digits != 0);
 }
 
@@ -166,8 +167,9 @@ bool operator<(const BigInteger& left, const BigInteger& right) {
     else {
         if (left.digits.size() != right.digits.size()) {
             return left.digits.size() < right.digits.size();
-        } else {
-            for (uint64_t i = left.digits.size() - 1; i >= 0; --i) {
+        }
+        else {
+            for (int64_t i = left.digits.size() - 1; i >= 0; --i) {
                 if (left.digits[i] != right.digits[i])
                     return left.digits[i] < right.digits[i];
             }
@@ -201,7 +203,8 @@ const BigInteger BigInteger::operator-() const {
 const BigInteger operator+(BigInteger left, const BigInteger& right) {
     if (left.is_negative) {
         return (right.is_negative) ? -(-left + (-right)) : (right - (-left));
-    } else {
+    }
+    else {
         if (right.is_negative)
             return (left - (-right));
     }
@@ -282,9 +285,9 @@ const BigInteger operator/(const BigInteger& left, const BigInteger& right) {
     base.is_negative = false;
     BigInteger result, current, tmp;
     result.digits.resize(left.digits.size());
-    uint64_t digit_result, l, r, m;
+    uint32_t digit_result, l, r, m;
 
-    for (uint64_t i = static_cast<uint64_t>(left.digits.size()) - 1; i >= 0; --i) {
+    for (int64_t i = static_cast<uint64_t>(left.digits.size()) - 1; i >= 0; --i) {
         current.shift_right();
         current.digits[0] = left.digits[i];
         current.RemoveLeadZeros();
@@ -324,14 +327,14 @@ const BigInteger BigInteger::operator^(BigInteger n) const {
     return result;
 }
 
-void resultOperation(const BigInteger& left, const BigInteger& right, char& operation){
+void resultOperation(const BigInteger& left, const BigInteger& right, char& operation) {
     switch (operation) {
     case '+':
         cout << (left + right) << endl;
         break;
     case '-':
         cout << (left - right) << endl;
-        break;
+        break; 
     case '*':
         cout << (left * right) << endl;
         break;
@@ -358,7 +361,7 @@ void resultOperation(const BigInteger& left, const BigInteger& right, char& oper
 
 int main() {
     std::ios::sync_with_stdio(false);
-	std::cin.tie(nullptr);
+    std::cin.tie(nullptr);
     string line1;
     string line2;
     char operation;
