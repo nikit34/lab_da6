@@ -15,13 +15,15 @@ public:
     BigInteger(int);
     uint64_t GetSize() const;
     friend ostream& operator<<(ostream& os, const BigInteger& bi);
-    uint16_t operator[](uint64_t i) const;
-    uint16_t& operator[](uint64_t i);
+    uint32_t operator[](uint64_t i) const;
+    uint32_t& operator[](uint64_t i);
     void RemoveLeadZeros();
     friend bool operator ==(const BigInteger& left, const BigInteger& right);
     friend bool operator !=(const BigInteger& left, const BigInteger& right);
     friend bool operator <(const BigInteger& left, const BigInteger& right);
     friend bool operator >(const BigInteger& left, const BigInteger& right);
+    friend bool operator>=(const BigInteger& left, const BigInteger& right);
+    friend bool operator<=(const BigInteger& left, const BigInteger& right);
     const BigInteger operator +() const;
     const BigInteger operator -() const;
     friend const BigInteger operator +(BigInteger left, const BigInteger& right);
@@ -39,7 +41,6 @@ public:
     const BigInteger operator --();
     friend const BigInteger operator *(const BigInteger& left, const BigInteger& right);
     friend const BigInteger operator /(const BigInteger& left, const BigInteger& right);
-    BigInteger& operator /=(const BigInteger& value);
     void shift_right();
     friend const BigInteger operator %(const BigInteger& left, const BigInteger& right);
     bool odd() const;
@@ -51,7 +52,7 @@ public:
 private:
 	static const uint64_t BASE = 1000000000;
 	bool is_negative;
-    std::vector<uint16_t> digits;
+    std::vector<uint32_t> digits;
 };
 
 uint64_t BigInteger::GetSize() const {
@@ -76,8 +77,8 @@ ostream& operator <<(ostream& os, const BigInteger& b) {
     return os;
 }
 
-uint16_t BigInteger::operator [](uint64_t i) const { return this->digits[i]; };
-uint16_t& BigInteger::operator [](uint64_t i) { return this->digits[i]; };
+uint32_t BigInteger::operator [](uint64_t i) const { return this->digits[i]; };
+uint32_t& BigInteger::operator [](uint64_t i) { return this->digits[i]; };
 
 BigInteger::BigInteger() {
     this->is_negative = false;
@@ -310,8 +311,8 @@ const BigInteger operator*(const BigInteger& left, const BigInteger& right) {
         carry = 0;
         for (uint64_t j = 0; j < right_size || carry != 0; ++j) {
             cur = result.digits[i + j] + ((uint64_t)left.digits[i]) * (j < right_size ? right.digits[j] : 0) + carry;
-            result.digits[i + j] = static_cast<uint16_t>(cur % BigInteger::BASE);
-            carry = static_cast<uint16_t>(cur / BigInteger::BASE);
+            result.digits[i + j] = static_cast<uint32_t>(cur % BigInteger::BASE);
+            carry = static_cast<uint32_t>(cur / BigInteger::BASE);
         }
     }
 
@@ -365,10 +366,6 @@ const BigInteger operator/(const BigInteger& left, const BigInteger& right) {
 
     result.RemoveLeadZeros();
     return result;
-}
-
-BigInteger& BigInteger::operator/=(const BigInteger& value) {
-    return *this = (*this / value);
 }
 
 bool BigInteger::odd() const {
