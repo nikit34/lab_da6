@@ -60,13 +60,8 @@ ostream& operator <<(ostream& os, const BigInteger& b) {
         if (b.is_negative)
             os << '-';
 
-        os << b.digits.back();
-        char old_fill = os.fill('0');
-
-        for (uint64_t i = static_cast<uint64_t>(b.digits.size()) - 2; i >= 0; --i) {
+        for (int64_t i = static_cast<uint64_t>(b.digits.size()) - 1; i >= 0; --i)
             os << b.digits[i];
-        }
-        os.fill(old_fill);
     }
     return os;
 }
@@ -368,7 +363,7 @@ const BigInteger BigInteger::operator^(BigInteger n) const {
 void resultOperation(string line1, string line2, char& operation){
     BigInteger left(line1);
     BigInteger right(line2);
-
+    BigInteger t;
     switch (operation) {
     case '+':
         cout << (left + right);
