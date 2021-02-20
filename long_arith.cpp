@@ -29,22 +29,17 @@ public:
     friend const BigInteger operator +(BigInteger left, const BigInteger& right);
     friend const BigInteger operator -(BigInteger left, const BigInteger& right);
     BigInteger& operator =(const BigInteger& value);
-    BigInteger& operator +=(const BigInteger& value);
-    BigInteger& operator -=(const BigInteger& value);
-    BigInteger& operator *=(const BigInteger& value);
-    BigInteger& operator /=(const BigInteger& value);
     friend const BigInteger operator *(const BigInteger& left, const BigInteger& right);
     friend const BigInteger operator /(const BigInteger& left, const BigInteger& right);
     void shift_right();
     friend const BigInteger operator %(const BigInteger& left, const BigInteger& right);
     bool odd() const;
-    bool even() const;
     const BigInteger operator^(BigInteger n) const;
 
     class DivideByZero: public std::exception {  };
 
 private:
-	static const uint64_t BASE = 1000000000;
+	static const uint64_t BASE = 100000;
 	bool is_negative;
     std::vector<uint32_t> digits;
 };
@@ -66,8 +61,8 @@ ostream& operator <<(ostream& os, const BigInteger& b) {
     return os;
 }
 
-uint32_t BigInteger::operator [](uint64_t i) const { return this->digits[i]; };
-uint32_t& BigInteger::operator [](uint64_t i) { return this->digits[i]; };
+uint32_t BigInteger::operator [](uint64_t i) const { return this->digits[i]; }
+uint32_t& BigInteger::operator [](uint64_t i) { return this->digits[i]; }
 
 BigInteger::BigInteger() {
     this->is_negative = false;
@@ -86,7 +81,7 @@ BigInteger::BigInteger(string& str) {
         this->is_negative = false;
     }
 
-    for (int64_t i = str.length(); i > 0; i -= 9) {
+    for (int64_t i = str.length(); i > 0; i = i - 9) {
         if (i <= 9){
             this->digits.push_back(atoi(str.substr(0, i).c_str()));  // strtoul string -> uint64_t
         } else {
@@ -107,7 +102,7 @@ BigInteger::BigInteger(int64_t& digits) {
 
     do {
         this->digits.push_back(digits % BigInteger::BASE);
-        digits /= BigInteger::BASE;
+        digits = digits / BigInteger::BASE;
     } while (digits != 0);
 }
 
@@ -115,7 +110,7 @@ BigInteger::BigInteger(uint64_t& digits) {
     this->is_negative = false;
     do {
         this->digits.push_back(digits % BigInteger::BASE);
-            digits /= BigInteger::BASE;
+            digits = digits / BigInteger::BASE;
     } while (digits != 0);
 }
 
@@ -128,7 +123,7 @@ BigInteger::BigInteger(int digit) {
     }
 
     this->digits.push_back(abs(digit) % BigInteger::BASE);
-    digit /= BigInteger::BASE;
+    digit = digit / BigInteger::BASE;
 
     if (digit != 0)
         this->digits.push_back(abs(digit));
@@ -222,11 +217,11 @@ const BigInteger operator+(BigInteger left, const BigInteger& right) {
         if (i == left.digits.size())
             left.digits.push_back(0);
 
-        left.digits[i] += carry + (i < right.digits.size() ? right.digits[i] : 0);
+        left.digits[i] = left.digits[i] + carry + (i < right.digits.size() ? right.digits[i] : 0);
         carry = left.digits[i] >= BigInteger::BASE;
 
         if (carry != 0)
-            left.digits[i] -= BigInteger::BASE;
+            left.digits[i] = left.digits[i] - BigInteger::BASE;
     }
     return left;
 }
@@ -241,10 +236,10 @@ const BigInteger operator-(BigInteger left, const BigInteger& right) {
 
     int carry = 0;
     for (uint64_t i = 0; i < right.digits.size() || carry != 0; ++i) {
-        left.digits[i] -= carry + (i < right.digits.size() ? right.digits[i] : 0);
+        left.digits[i] = left.digits[i] - carry + (i < right.digits.size() ? right.digits[i] : 0);
         carry = left.digits[i] < 0;
         if (carry != 0)
-            left.digits[i] += BigInteger::BASE;
+            left.digits[i] = left.digits[i] + BigInteger::BASE;
     }
 
     left.RemoveLeadZeros();
@@ -253,23 +248,6 @@ const BigInteger operator-(BigInteger left, const BigInteger& right) {
 
 BigInteger& BigInteger::operator=(const BigInteger& value) {
     return *this = value;
-}
-
-BigInteger& BigInteger::operator+=(const BigInteger& value) {
-    return *this = (*this + value);
-}
-
-BigInteger& BigInteger::operator -=(const BigInteger& value) {
-    *this = (*this - value);
-    return *this;
-}
-
-BigInteger& BigInteger::operator *=(const BigInteger& value) {
-    return *this = (*this * value);
-}
-
-BigInteger& BigInteger::operator /=(const BigInteger& value) {
-    return *this = (*this / value);
 }
 
 const BigInteger operator*(const BigInteger& left, const BigInteger& right) {
@@ -345,17 +323,13 @@ bool BigInteger::odd() const {
     return (this->digits.size() == 0) ? false : this->digits[0] & 1;
 }
 
-bool BigInteger::even() const {
-    return !this->odd();
-}
-
 const BigInteger BigInteger::operator^(BigInteger n) const {
     BigInteger a(*this), result(1);
     while (n != 0) {
         if (n.odd())
-            result *= a;
-        a *= a;
-        n /= 2;
+            result = result * a;
+        a = a * a;
+        n = n / 2;
     }
     return result;
 }
@@ -396,6 +370,8 @@ void resultOperation(string line1, string line2, char& operation){
 }
 
 int main() {
+    std::ios::sync_with_stdio(false);
+	std::cin.tie(nullptr);
     string line1;
     string line2;
     char operation;
@@ -405,6 +381,7 @@ int main() {
         cin >> line2;
         cin >> operation;
         resultOperation(line1, line2, operation);
+        cout << endl;
     }
     return 0;
 }
