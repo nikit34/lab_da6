@@ -13,7 +13,6 @@ public:
     BigInteger(int64_t& digits);
     BigInteger(uint64_t& digits);
     BigInteger(int);
-    uint64_t GetSize() const;
     friend ostream& operator<<(ostream& os, const BigInteger& bi);
     uint32_t operator[](uint64_t i) const;
     uint32_t& operator[](uint64_t i);
@@ -28,7 +27,6 @@ public:
     const BigInteger operator -() const;
     friend const BigInteger operator +(BigInteger left, const BigInteger& right);
     friend const BigInteger operator -(BigInteger left, const BigInteger& right);
-    BigInteger& operator =(const BigInteger& value);
     friend const BigInteger operator *(const BigInteger& left, const BigInteger& right);
     friend const BigInteger operator /(const BigInteger& left, const BigInteger& right);
     void shift_right();
@@ -43,10 +41,6 @@ private:
 	bool is_negative;
     std::vector<uint32_t> digits;
 };
-
-uint64_t BigInteger::GetSize() const {
-    return this->digits.size();
-}
 
 ostream& operator <<(ostream& os, const BigInteger& b) {
     if (b.digits.empty())
@@ -246,10 +240,6 @@ const BigInteger operator-(BigInteger left, const BigInteger& right) {
     return left;
 }
 
-BigInteger& BigInteger::operator=(const BigInteger& value) {
-    return *this = value;
-}
-
 const BigInteger operator*(const BigInteger& left, const BigInteger& right) {
     BigInteger result;
     uint64_t left_size = left.digits.size();
@@ -324,47 +314,44 @@ bool BigInteger::odd() const {
 }
 
 const BigInteger BigInteger::operator^(BigInteger n) const {
-    BigInteger a(*this), result(1);
+    BigInteger b(*this), result(1);
     while (n != 0) {
         if (n.odd())
-            result = result * a;
-        a = a * a;
+            result = result * b;
+        b = b * b;
         n = n / 2;
     }
     return result;
 }
 
-void resultOperation(string line1, string line2, char& operation){
-    BigInteger left(line1);
-    BigInteger right(line2);
-    BigInteger t;
+void resultOperation(const BigInteger& left, const BigInteger& right, char& operation){
     switch (operation) {
     case '+':
-        cout << (left + right);
+        cout << (left + right) << endl;
         break;
     case '-':
-        cout << (left - right);
+        cout << (left - right) << endl;
         break;
     case '*':
-        cout << (left * right);
+        cout << (left * right) << endl;
         break;
     case '/':
-        cout << (left / right);
+        cout << (left / right) << endl;
         break;
     case '^':
-        cout << (left ^ right);
+        cout << (left ^ right) << endl;
         break;
     case '<':
-        cout << (left < right);
+        cout << (left < right) << endl;
         break;
     case '>':
-        cout << (left > right);
+        cout << (left > right) << endl;
         break;
     case '=':
-        cout << (left == right);
+        cout << (left == right) << endl;
         break;
     default:
-        cout << "Error";
+        cout << "Error" << endl;
         break;
     }
 }
@@ -379,9 +366,10 @@ int main() {
     while (true) {
         cin >> line1;
         cin >> line2;
+        BigInteger left(line1);
+        BigInteger right(line2);
         cin >> operation;
-        resultOperation(line1, line2, operation);
-        cout << endl;
+        resultOperation(left, right, operation);
     }
     return 0;
 }
