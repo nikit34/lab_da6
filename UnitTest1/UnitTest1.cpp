@@ -19,24 +19,8 @@ namespace UnitTest1
 		}
 		TEST_METHOD(TestMethod2)
 		{
-			std::string s1 = "-453465";
-			std::string s2 = "-453465";
-			BigInteger t1(s1);
-			BigInteger t2(s2);
-			Assert::IsTrue(t1 == t2);
-		}
-		TEST_METHOD(TestMethod3)
-		{
 			std::string s1 = "453465";
 			std::string s2 = "543543245";
-			BigInteger t1(s1);
-			BigInteger t2(s2);
-			Assert::IsFalse(t1 == t2);
-		}
-		TEST_METHOD(TestMethod4)
-		{
-			std::string s1 = "453465";
-			std::string s2 = "-453465";
 			BigInteger t1(s1);
 			BigInteger t2(s2);
 			Assert::IsFalse(t1 == t2);
@@ -57,24 +41,8 @@ namespace UnitTest1
 		TEST_METHOD(TestMethod2)
 		{
 			std::string s1 = "453465";
-			std::string s2 = "-543543245";
-			BigInteger t1(s1);
-			BigInteger t2(s2);
-			Assert::IsTrue(t1 != t2);
-		}
-		TEST_METHOD(TestMethod3)
-		{
-			std::string s1 = "453465";
 			BigInteger t1(s1);
 			BigInteger t2(s1);
-			Assert::IsFalse(t1 != t2);
-		}
-		TEST_METHOD(TestMethod4)
-		{
-			std::string s1 = "-453465";
-			std::string s2 = "-453465";
-			BigInteger t1(s1);
-			BigInteger t2(s2);
 			Assert::IsFalse(t1 != t2);
 		}
 	};
@@ -91,14 +59,6 @@ namespace UnitTest1
 			Assert::IsTrue(t1 <= t2);
 		}
 		TEST_METHOD(TestMethod2)
-		{
-			std::string s1 = "453465";
-			std::string s2 = "-543543245";
-			BigInteger t1(s1);
-			BigInteger t2(s2);
-			Assert::IsFalse(t1 <= t2);
-		}
-		TEST_METHOD(TestMethod3)
 		{
 			std::string s1 = "453465";
 			std::string s2 = "453465";
@@ -120,14 +80,6 @@ namespace UnitTest1
 			Assert::IsTrue(t1 >= t2);
 		}
 		TEST_METHOD(TestMethod2)
-		{
-			std::string s1 = "-543543245";
-			std::string s2 = "453465";
-			BigInteger t1(s1);
-			BigInteger t2(s2);
-			Assert::IsFalse(t1 >= t2);
-		}
-		TEST_METHOD(TestMethod3)
 		{
 			std::string s1 = "543543245";
 			std::string s2 = "543543245";
@@ -151,14 +103,6 @@ namespace UnitTest1
 		TEST_METHOD(TestMethod2)
 		{
 			std::string s1 = "453465";
-			std::string s2 = "-543543245";
-			BigInteger t1(s1);
-			BigInteger t2(s2);
-			Assert::IsFalse(t1 < t2);
-		}
-		TEST_METHOD(TestMethod3)
-		{
-			std::string s1 = "453465";
 			std::string s2 = "453465";
 			BigInteger t1(s1);
 			BigInteger t2(s2);
@@ -179,14 +123,6 @@ namespace UnitTest1
 		}
 		TEST_METHOD(TestMethod2)
 		{
-			std::string s1 = "-543543245";
-			std::string s2 = "453465";
-			BigInteger t1(s1);
-			BigInteger t2(s2);
-			Assert::IsFalse(t1 > t2);
-		}
-		TEST_METHOD(TestMethod3)
-		{
 			std::string s1 = "453465";
 			std::string s2 = "453465";
 			BigInteger t1(s1);
@@ -206,12 +142,6 @@ namespace UnitTest1
 			Assert::AreEqual(t.odd(), true);
 		}
 		TEST_METHOD(TestMethod2)
-		{
-			std::string s = "-453465";
-			BigInteger t(s);
-			Assert::AreEqual(t.odd(), true);
-		}
-		TEST_METHOD(TestMethod3)
 		{
 			std::string s = "45346565456";
 			BigInteger t(s);
