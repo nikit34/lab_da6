@@ -130,24 +130,6 @@ namespace UnitTest1
 			Assert::IsFalse(t1 > t2);
 		}
 	};
-
-	TEST_CLASS(UnitTest7)
-	{
-	public:
-
-		TEST_METHOD(TestMethod1)
-		{
-			std::string s = "453465";
-			BigInteger t(s);
-			Assert::AreEqual(t.odd(), true);
-		}
-		TEST_METHOD(TestMethod2)
-		{
-			std::string s = "45346565456";
-			BigInteger t(s);
-			Assert::AreEqual(t.odd(), false);
-		}
-	};
 }
 
 

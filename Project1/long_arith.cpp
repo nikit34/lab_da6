@@ -13,8 +13,6 @@ public:
     BigInteger(const string& str);
     BigInteger(uint64_t digits);
     friend ostream& operator<<(ostream& os, const BigInteger& bi);
-    uint64_t operator[](uint64_t i) const;
-    uint64_t& operator[](uint64_t i);
     void RemoveLeadZeros();
     friend bool operator ==(const BigInteger& left, const BigInteger& right);
     friend bool operator !=(const BigInteger& left, const BigInteger& right);
@@ -22,15 +20,12 @@ public:
     friend bool operator >(const BigInteger& left, const BigInteger& right);
     friend bool operator>=(const BigInteger& left, const BigInteger& right);
     friend bool operator<=(const BigInteger& left, const BigInteger& right);
-    const BigInteger operator +() const;
-    const BigInteger operator -() const;
     friend const BigInteger operator +(const  BigInteger& left, const BigInteger& right);
     friend const BigInteger operator -(const BigInteger& left, const BigInteger& right);
     friend const BigInteger operator *(const BigInteger& left, const BigInteger& right);
     friend const BigInteger operator /(const BigInteger& left, const BigInteger& right);
     void shift_right();
-    bool odd() const;
-    const BigInteger operator^(BigInteger n) const;
+    const BigInteger operator^(const BigInteger& n) const;
     friend string BigToString(const BigInteger& b);
 
 private:
@@ -43,7 +38,7 @@ ostream& operator <<(ostream& os, const BigInteger& b) {
         os << 0;
     else {
         os << b.digits.back();
-        for (int64_t i = static_cast<uint64_t>(b.digits.size()) - 2; i >= 0; --i)
+        for (int64_t i = b.digits.size() - 2; i >= 0; --i)
             os << setw(9) << setfill('0') << b.digits[i];
     }
     return os;
@@ -59,10 +54,6 @@ string BigToString(const BigInteger& b) {
     }
     return out;
 }
-
-uint64_t BigInteger::operator [](uint64_t i) const { return this->digits[i]; }
-uint64_t& BigInteger::operator [](uint64_t i) { return this->digits[i]; }
-
 
 BigInteger::BigInteger(const string& str) {
     for (int64_t i = str.length() - 1; i >= 0; i = i - 9) {
@@ -253,11 +244,7 @@ const BigInteger operator/(const BigInteger& left, const BigInteger& right) {
     return result;
 }
 
-bool BigInteger::odd() const {
-    return (this->digits.size() == 0) ? false : this->digits[0] & 1;
-}
-
-const BigInteger BigInteger::operator^(BigInteger n) const {
+const BigInteger BigInteger::operator^(const BigInteger& n) const {
     BigInteger b(*this);
     if (n == BigInteger(0)){
         if (b == BigInteger(0))
@@ -328,6 +315,7 @@ ostream& resultOperation(ostream& out, const BigInteger& left, const BigInteger&
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(nullptr);
+
     string line1;
     string line2;
     char operation;
