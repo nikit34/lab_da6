@@ -14,8 +14,8 @@ public:
     BigInteger(uint64_t& digits);
     BigInteger(int);
     friend ostream& operator<<(ostream& os, const BigInteger& bi);
-    uint32_t operator[](uint64_t i) const;
-    uint32_t& operator[](uint64_t i);
+    uint64_t operator[](uint64_t i) const;
+    uint64_t& operator[](uint64_t i);
     void RemoveLeadZeros();
     friend bool operator ==(const BigInteger& left, const BigInteger& right);
     friend bool operator !=(const BigInteger& left, const BigInteger& right);
@@ -37,7 +37,7 @@ public:
 private:
     static const uint64_t BASE = 100000;
     bool is_negative;
-    std::vector<uint32_t> digits;
+    std::vector<uint64_t> digits;
 };
 
 ostream& operator <<(ostream& os, const BigInteger& b) {
@@ -67,8 +67,8 @@ std::string BigToString(const BigInteger& b) {
     return out;
 }
 
-uint32_t BigInteger::operator [](uint64_t i) const { return this->digits[i]; }
-uint32_t& BigInteger::operator [](uint64_t i) { return this->digits[i]; }
+uint64_t BigInteger::operator [](uint64_t i) const { return this->digits[i]; }
+uint64_t& BigInteger::operator [](uint64_t i) { return this->digits[i]; }
 
 BigInteger::BigInteger() {
     this->is_negative = false;
@@ -88,16 +88,16 @@ BigInteger::BigInteger(string& str) {
         this->is_negative = false;
     }
 
-    for (int64_t i = str.length(); i > 0; i = i - 9) {
-        if (i <= 9) {
-            this->digits.push_back(atoi(str.substr(0, i).c_str()));  // strtoul string -> uint64_t
+    for (int64_t i = str.length() - 1; i >= 0; i = i - 5) {
+        if (i < 5) {
+            this->digits.push_back(atoll(str.substr(0, i + 1).c_str()));  // atoll string -> uint64_t
         }
         else {
-            this->digits.push_back(atoi(str.substr(i - 9, 9).c_str()));
+            this->digits.push_back(atoll(str.substr(i - 4, 5).c_str()));
         }
     }
     this->RemoveLeadZeros();
-}
+} // 1- 576565422 4 2- 
 
 BigInteger::BigInteger(int64_t& digits) {
     if (digits < 0) {
@@ -212,7 +212,7 @@ const BigInteger BigInteger::operator-() const {
     copy.is_negative = !copy.is_negative;
     return copy;
 }
-
+// 576565422 4  534658754
 const BigInteger operator+(const BigInteger& left, const BigInteger& right) {
     if (left.is_negative)
         return (right.is_negative) ? -(-left + (-right)) : (right - (-left));
@@ -221,19 +221,19 @@ const BigInteger operator+(const BigInteger& left, const BigInteger& right) {
             return (left - (-right));
     }
 
-    uint16_t carry = 0;
+    uint64_t carry = 0;
     uint64_t max_size_integer = std::max(left.digits.size(), right.digits.size());
-    uint16_t col_digit = 0;
+    uint64_t col_digit = 0;
     BigInteger res;
     for (uint64_t i = 0; i < max_size_integer; ++i) {
         if (left.digits.size() <= i)
             col_digit = right.digits[i] + carry;
         else if (right.digits.size() <= i)
-            col_digit = left.digits[i] + carry;
+            col_digit = left.digits[i] + carry; 
         else
-            col_digit = left.digits[i] + right.digits[i] + carry;
-        res.digits.push_back(col_digit % left.BASE);  // col_digit: 4
-        carry = col_digit / left.BASE;
+            col_digit = left.digits[i] + right.digits[i] + carry;  
+        res.digits.push_back(col_digit % left.BASE); 
+        carry = col_digit / left.BASE; 
     }
     if (carry != 0)
         res.digits.push_back(carry);
@@ -267,14 +267,14 @@ const BigInteger operator*(const BigInteger& left, const BigInteger& right) {
     uint64_t right_size = right.digits.size();
     result.digits.resize(left_size + right_size);
 
-    uint32_t carry;
+    uint64_t carry;
     uint64_t cur;
     for (uint64_t i = 0; i < left_size; ++i) {
         carry = 0;
         for (uint64_t j = 0; j < right_size || carry != 0; ++j) {
             cur = result.digits[i + j] + ((uint64_t)left.digits[i]) * (j < right_size ? right.digits[j] : 0) + carry;
-            result.digits[i + j] = static_cast<uint32_t>(cur % BigInteger::BASE);
-            carry = static_cast<uint32_t>(cur / BigInteger::BASE);
+            result.digits[i + j] = static_cast<uint64_t>(cur % BigInteger::BASE);
+            carry = static_cast<uint64_t>(cur / BigInteger::BASE);
         }
     }
 
@@ -303,7 +303,7 @@ const BigInteger operator/(const BigInteger& left, const BigInteger& right) {
     base.is_negative = false;
     BigInteger result, current, tmp;
     result.digits.resize(left.digits.size());
-    uint32_t digit_result, l, r, m;
+    uint64_t digit_result, l, r, m;
 
     for (int64_t i = static_cast<uint64_t>(left.digits.size()) - 1; i >= 0; --i) {
         current.shift_right();
