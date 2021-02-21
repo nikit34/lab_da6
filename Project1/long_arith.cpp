@@ -2,6 +2,7 @@
 #include <string.h>
 #include <vector>
 #include <string>
+#include <iomanip> 
 
 using namespace std;
 
@@ -37,23 +38,24 @@ public:
 private:
     static const uint64_t BASE = 1000000000;
     bool is_negative;
-    std::vector<uint64_t> digits;
+    vector<uint64_t> digits;
 };
 
 ostream& operator <<(ostream& os, const BigInteger& b) {
     if (b.digits.empty())
         os << 0;
     else {
+        b.digits.back();
         if (b.is_negative)
             os << '-';
 
-        for (int64_t i = static_cast<uint64_t>(b.digits.size()) - 1; i >= 0; --i)
-            os << b.digits[i];
+        for (int64_t i = static_cast<uint64_t>(b.digits.size()) - 2; i >= 0; --i)
+            os << setw(9) << setfill('0') << b.digits[i];
     }
     return os;
 }
 
-std::string BigToString(const BigInteger& b) {
+string BigToString(const BigInteger& b) {
     string out;
     if (b.digits.empty()) 
         out = "0";        
@@ -61,8 +63,8 @@ std::string BigToString(const BigInteger& b) {
         if (b.is_negative) 
             out = "-";
 
-        for (int64_t i = static_cast<uint64_t>(b.digits.size()) - 1; i >= 0; --i)
-            out.append(std::to_string(b.digits[i]));
+        for (int64_t i = b.digits.size() - 1; i >= 0; --i)
+            out.append(to_string(b.digits[i]));
     }
     return out;
 }
@@ -88,12 +90,12 @@ BigInteger::BigInteger(string& str) {
         this->is_negative = false;
     }
 
-    for (int64_t i = str.length() - 1; i >= 0; i = i - 5) {
-        if (i < 5) {
+    for (int64_t i = str.length() - 1; i >= 0; i = i - 9) {
+        if (i < 9) {
             this->digits.push_back(atoll(str.substr(0, i + 1).c_str()));  // atoll string -> uint64_t
         }
         else {
-            this->digits.push_back(atoll(str.substr(i - 4, 5).c_str()));
+            this->digits.push_back(atoll(str.substr(i - 8, 9).c_str()));
         }
     }
     this->RemoveLeadZeros();
@@ -222,9 +224,10 @@ const BigInteger operator+(const BigInteger& left, const BigInteger& right) {
     }
 
     uint64_t carry = 0;
-    uint64_t max_size_integer = std::max(left.digits.size(), right.digits.size());
+    uint64_t max_size_integer = max(left.digits.size(), right.digits.size());
     uint64_t col_digit = 0;
     BigInteger res;
+
     for (uint64_t i = 0; i < max_size_integer; ++i) {
         if (left.digits.size() <= i)
             col_digit = right.digits[i] + carry;

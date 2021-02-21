@@ -2,7 +2,6 @@
 #include "CppUnitTest.h"
 #include "../Project1/long_arith.cpp"
 #include "../Project1/Source.cpp"
-
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
 
@@ -245,15 +244,6 @@ namespace UnitTest2
 			BigInteger b2(s2);
 			Assert::AreEqual(BigToString(b1 + b2), s3);
 		}
-		TEST_METHOD(TestMethod3)
-		{
-			std::string s1 = "001000005422";
-			std::string s2 = "0004455453";
-			std::string s3 = "1004460875";
-			BigInteger b1(s1);
-			BigInteger b2(s2);
-			Assert::AreEqual(BigToString(b1 + b2), s3);
-		}
 	};
 	TEST_CLASS(UnitTest2)
 	{
@@ -302,16 +292,7 @@ namespace UnitTest2
 		{
 			std::string s1 = "526";
 			std::string s2 = "4565422";
-			std::string s3 = "2401411972";
-			BigInteger b1(s1);
-			BigInteger b2(s2);
-			Assert::AreEqual(BigToString(b1 * b2), s3);
-		}
-		TEST_METHOD(TestMethod3)
-		{
-			std::string s1 = "00526";
-			std::string s2 = "45654204";
-			std::string s3 = "24014111304"; // мои реквизиты )
+			std::string s3 = "2401411972"; // мои реквизиты )
 			BigInteger b1(s1);
 			BigInteger b2(s2);
 			Assert::AreEqual(BigToString(b1 * b2), s3);
@@ -343,9 +324,9 @@ namespace UnitTest2
 			std::string s1 = "00257983739677317712";
 			std::string s2 = "5675666";
 			std::string s3 = "45454355432";
-			longNumber b1(s1);
-			longNumber b2(s2);
-			Assert::AreEqual(bigToString(b1 / b2), s3);
+			BigInteger b1(s1);
+			BigInteger b2(s2);
+			Assert::AreEqual(BigToString(b1 / b2), s3);
 		}
 	};
 	TEST_CLASS(UnitTest5)
@@ -365,6 +346,15 @@ namespace UnitTest2
 			std::string s1 = "23852";
 			std::string s2 = "4";
 			std::string s3 = "323667581491753216";
+			BigInteger b1(s1);
+			BigInteger b2(s2);
+			Assert::AreEqual(BigToString(b1 ^ b2), s3);
+		}
+		TEST_METHOD(TestMethod3)
+		{
+			std::string s1 = "22";
+			std::string s2 = "43";
+			std::string s3 = "5298772520065297710013152795217779063266385813905550082048";
 			BigInteger b1(s1);
 			BigInteger b2(s2);
 			Assert::AreEqual(BigToString(b1 ^ b2), s3);
