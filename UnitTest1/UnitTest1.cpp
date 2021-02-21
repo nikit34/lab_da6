@@ -133,15 +133,67 @@ namespace UnitTest2
 			BigInteger b2(s2);
 			Assert::AreEqual(BigToString(b1 - b2), s3);
 		}
-
+	};
+	TEST_CLASS(UnitTest3)
+	{
+	public:
+		TEST_METHOD(TestMethod1)
+		{
+			std::string s1 = "5226";
+			std::string s2 = "4565422";
+			std::string s3 = "23858895372";
+			BigInteger b1(s1);
+			BigInteger b2(s2);
+			Assert::AreEqual(BigToString(b1 * b2), s3);
+		}
 		TEST_METHOD(TestMethod2)
 		{
-			std::string s1 = "5111224176";
-			std::string s2 = "4576565422";
-			std::string s3 = "534658754";
+			std::string s1 = "526";
+			std::string s2 = "4565422";
+			std::string s3 = "2401411972";
+			BigInteger b1(s1);
+			BigInteger b2(s2);
+			Assert::AreEqual(BigToString(b1 * b2), s3);
+		}
+	};
+	TEST_CLASS(UnitTest4)
+	{
+	public:
+		TEST_METHOD(TestMethod1)
+		{
+			std::string s1 = "23858895372";
+			std::string s2 = "4565422";
+			std::string s3 = "5226";
+			BigInteger b1(s1);
+			BigInteger b2(s2);
+			Assert::AreEqual(BigToString(b1 / b2), s3);
+		}
+		TEST_METHOD(TestMethod2)
+		{
+			std::string s1 = "2401411972";
+			std::string s2 = "526";
+			std::string s3 = "4565422";
+			BigInteger b1(s1);
+			BigInteger b2(s2);
+			Assert::AreEqual(BigToString(b1 / b2), s3);
+		}
+		TEST_METHOD(TestMethod3)
+		{
+			std::string s1 = "23858895372";
+			std::string s2 = "4565422";
+			std::string s3 = "5226";
 			longNumber b1(s1);
 			longNumber b2(s2);
-			Assert::AreEqual(bigToString(b1 - b2), s3);
+			Assert::AreEqual(bigToString(b1 / b2), s3);
+		}
+		TEST_METHOD(TestMethod4)
+		{
+			std::string s1 = "2401411972";
+			std::string s2 = "526";
+			std::string s3 = "4565422";
+			longNumber b1(s1);
+			longNumber b2(s2);
+			Assert::AreEqual(bigToString(b1 / b2), s3);
 		}
 	};
 }
