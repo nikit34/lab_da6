@@ -5,7 +5,6 @@
 using namespace std;
 
 
-
 class BigInteger {
 public:
     BigInteger();
@@ -215,10 +214,12 @@ const BigInteger operator+(BigInteger left, const BigInteger& right) {
             left.digits.push_back(0);
 
         left.digits[i] = left.digits[i] + carry + (i < right.digits.size() ? right.digits[i] : 0);
-        carry = left.digits[i] >= BigInteger::BASE;
-
-        if (carry != 0)
+        if (left.digits[i] >= BigInteger::BASE) {
+            carry = 1;
             left.digits[i] = left.digits[i] - BigInteger::BASE;
+        } else {
+            carry = 0;
+        }
     }
     return left;
 }
@@ -345,13 +346,13 @@ void resultOperation(const BigInteger& left, const BigInteger& right, char& oper
         cout << (left ^ right) << endl;
         break;
     case '<':
-        cout << (left < right) << endl;
+        cout << ((left < right) ? "true" : "false") << endl;
         break;
     case '>':
-        cout << (left > right) << endl;
+        cout << ((left > right) ? "true" : "false") << endl;
         break;
     case '=':
-        cout << (left == right) << endl;
+        cout << ((left == right) ? "true" : "false") << endl;
         break;
     default:
         cout << "Error" << endl;
@@ -366,12 +367,9 @@ int main() {
     string line2;
     char operation;
 
-    while (true) {
-        cin >> line1;
-        cin >> line2;
+    while (cin >> line1 >> line2 >> operation) {
         BigInteger left(line1);
         BigInteger right(line2);
-        cin >> operation;
         resultOperation(left, right, operation);
     }
     return 0;
