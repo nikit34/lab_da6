@@ -97,7 +97,7 @@ BigInteger::BigInteger(string& str) {
         }
     }
     this->RemoveLeadZeros();
-} // 1- 576565422 4 2- 
+}
 
 BigInteger::BigInteger(int64_t digits) {
     if (digits < 0) {
@@ -384,7 +384,7 @@ ostream& resultOperation(ostream& out, const BigInteger& left, const BigInteger&
         out << ((left == right) ? "true" : "false");
         break;
     default:
-        out << "Error" ;
+        out << "Error";
         break;
     }
     return out << endl;
