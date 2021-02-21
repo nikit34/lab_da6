@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "CppUnitTest.h"
 #include "../Project1/long_arith.cpp"
+#include "../Project1/Source.cpp"
 
 using namespace Microsoft::VisualStudio::CppUnitTestFramework;
 
@@ -102,23 +103,31 @@ namespace UnitTest1
 			Assert::AreEqual(t.odd(), false);
 		}
 	};
+}
 
-	TEST_CLASS(UnitTest4)
+
+namespace UnitTest2
+{
+	TEST_CLASS(UnitTest1)
 	{
 	public:
 		TEST_METHOD(TestMethod1)
 		{
-			 /*std::string s1 = "45346565456";
-			 std::string s2 = "655334";
-			 std::string s3 = "4980445347220790";*/
-			std::string s1 = "49804";
-			std::string s2 = "65006";
-			std::string s3 = "114810";
-
-			BigInteger t1(s1);
-			BigInteger t2(s2);
-			BigInteger t3(s3);
-			Assert::IsTrue(t1 + t2 == t3);
+			std::string s1 = "4576565422";
+			std::string s2 = "534658754";
+			std::string s3 = "5111224176";
+			BigInteger b1(s1);
+			BigInteger b2(s2);
+			Assert::AreEqual(BigToString(b1 + b2), s3);
+		}
+		TEST_METHOD(TestMethod2)
+		{
+			std::string s1 = "4576565422";
+			std::string s2 = "534658754";
+			std::string s3 = "5111224176";
+			longNumber b1(s1);
+			longNumber b2(s2);
+			Assert::AreEqual(bigToString(b1 + b2), s3);
 		}
 	};
 }

@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string.h>
 #include <vector>
+#include <string>
 
 using namespace std;
 
@@ -24,15 +25,14 @@ public:
     friend bool operator<=(const BigInteger& left, const BigInteger& right);
     const BigInteger operator +() const;
     const BigInteger operator -() const;
-    friend const BigInteger operator +(BigInteger left, const BigInteger& right);
-    friend const BigInteger operator -(BigInteger left, const BigInteger& right);
+    friend const BigInteger operator +(const  BigInteger& left, const BigInteger& right);
+    friend const BigInteger operator -(const BigInteger& left, const BigInteger& right);
     friend const BigInteger operator *(const BigInteger& left, const BigInteger& right);
     friend const BigInteger operator /(const BigInteger& left, const BigInteger& right);
     void shift_right();
     bool odd() const;
     const BigInteger operator^(BigInteger n) const;
-
-    class DivideByZero : public std::exception {  };
+    friend string BigToString(const BigInteger& b);
 
 private:
     static const uint64_t BASE = 100000;
@@ -51,6 +51,20 @@ ostream& operator <<(ostream& os, const BigInteger& b) {
             os << b.digits[i];
     }
     return os;
+}
+
+std::string BigToString(const BigInteger& b) {
+    string out;
+    if (b.digits.empty()) 
+        out = "0";        
+    else {
+        if (b.is_negative) 
+            out = "-";
+
+        for (int64_t i = static_cast<uint64_t>(b.digits.size()) - 1; i >= 0; --i)
+            out.append(std::to_string(b.digits[i]));
+    }
+    return out;
 }
 
 uint32_t BigInteger::operator [](uint64_t i) const { return this->digits[i]; }
@@ -199,32 +213,34 @@ const BigInteger BigInteger::operator-() const {
     return copy;
 }
 
-const BigInteger operator+(BigInteger left, const BigInteger& right) {
-    if (left.is_negative) {
+const BigInteger operator+(const BigInteger& left, const BigInteger& right) {
+    if (left.is_negative)
         return (right.is_negative) ? -(-left + (-right)) : (right - (-left));
-    }
     else {
         if (right.is_negative)
             return (left - (-right));
     }
 
-    int carry = 0;
-    for (uint64_t i = 0; i < std::max(left.digits.size(), right.digits.size()) || carry != 0; ++i) {
-        if (i == left.digits.size())
-            left.digits.push_back(0);
-
-        left.digits[i] = left.digits[i] + carry + (i < right.digits.size() ? right.digits[i] : 0);
-        if (left.digits[i] >= BigInteger::BASE) {
-            carry = 1;
-            left.digits[i] = left.digits[i] - BigInteger::BASE;
-        } else {
-            carry = 0;
-        }
+    uint16_t carry = 0;
+    uint64_t max_size_integer = std::max(left.digits.size(), right.digits.size());
+    uint16_t col_digit = 0;
+    BigInteger res;
+    for (uint64_t i = 0; i < max_size_integer; ++i) {
+        if (left.digits.size() <= i)
+            col_digit = right.digits[i] + carry;
+        else if (right.digits.size() <= i)
+            col_digit = left.digits[i] + carry;
+        else
+            col_digit = left.digits[i] + right.digits[i] + carry;
+        res.digits.push_back(col_digit % left.BASE);  // col_digit: 4
+        carry = col_digit / left.BASE;
     }
-    return left;
+    if (carry != 0)
+        res.digits.push_back(carry);
+    return res;
 }
 
-const BigInteger operator-(BigInteger left, const BigInteger& right) {
+const BigInteger operator-(const BigInteger& left, const BigInteger& right) {
     if (right.is_negative)
         return left + (-right);
     else if (left.is_negative)
@@ -233,14 +249,15 @@ const BigInteger operator-(BigInteger left, const BigInteger& right) {
         return -(right - left);
 
     int carry = 0;
+    BigInteger res;
     for (uint64_t i = 0; i < right.digits.size() || carry != 0; ++i) {
-        left.digits[i] = left.digits[i] - carry + (i < right.digits.size() ? right.digits[i] : 0);
+        res.digits[i] = left.digits[i] - carry + (i < right.digits.size() ? right.digits[i] : 0);
         carry = left.digits[i] < 0;
         if (carry != 0)
-            left.digits[i] = left.digits[i] + BigInteger::BASE;
+            res.digits[i] = left.digits[i] + BigInteger::BASE;
     }
 
-    left.RemoveLeadZeros();
+    res.RemoveLeadZeros();
     return left;
 }
 
@@ -280,7 +297,7 @@ void BigInteger::shift_right() {
 
 const BigInteger operator/(const BigInteger& left, const BigInteger& right) {
     if (right == 0)
-        throw BigInteger::DivideByZero();
+        cout << "Error" << endl;
 
     BigInteger base = right;
     base.is_negative = false;
@@ -328,41 +345,42 @@ const BigInteger BigInteger::operator^(BigInteger n) const {
     return result;
 }
 
-void resultOperation(const BigInteger& left, const BigInteger& right, char& operation) {
+ostream& resultOperation(ostream& out, const BigInteger& left, const BigInteger& right, char& operation) {
     switch (operation) {
     case '+':
-        cout << (left + right) << endl;
+        out << (left + right);
         break;
     case '-':
-        cout << (left - right) << endl;
+        out << (left - right);
         break; 
     case '*':
-        cout << (left * right) << endl;
+        out << (left * right);
         break;
     case '/':
-        cout << (left / right) << endl;
+        out << (left / right);
         break;
     case '^':
-        cout << (left ^ right) << endl;
+        out << (left ^ right);
         break;
     case '<':
-        cout << ((left < right) ? "true" : "false") << endl;
+        out << ((left < right) ? "true" : "false");
         break;
     case '>':
-        cout << ((left > right) ? "true" : "false") << endl;
+        out << ((left > right) ? "true" : "false");
         break;
     case '=':
-        cout << ((left == right) ? "true" : "false") << endl;
+        out << ((left == right) ? "true" : "false");
         break;
     default:
-        cout << "Error" << endl;
+        out << "Error" ;
         break;
     }
+    return out << endl;
 }
 
 int main() {
-    std::ios::sync_with_stdio(false);
-    std::cin.tie(nullptr);
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
     string line1;
     string line2;
     char operation;
@@ -370,7 +388,7 @@ int main() {
     while (cin >> line1 >> line2 >> operation) {
         BigInteger left(line1);
         BigInteger right(line2);
-        resultOperation(left, right, operation);
+        resultOperation(cout, left, right, operation);
     }
     return 0;
 }
