@@ -212,7 +212,7 @@ const BigInteger BigInteger::operator-() const {
     copy.is_negative = !copy.is_negative;
     return copy;
 }
-// 576565422 4  534658754
+
 const BigInteger operator+(const BigInteger& left, const BigInteger& right) {
     if (left.is_negative)
         return (right.is_negative) ? -(-left + (-right)) : (right - (-left));
@@ -248,17 +248,28 @@ const BigInteger operator-(const BigInteger& left, const BigInteger& right) {
     else if (left < right)
         return -(right - left);
 
-    int carry = 0;
+    uint16_t carry = 0;
+    uint64_t left_size = left.digits.size();
+    uint64_t right_size = right.digits.size();
+    int64_t col_digit = 0;
     BigInteger res;
-    for (uint64_t i = 0; i < right.digits.size() || carry != 0; ++i) {
-        res.digits[i] = left.digits[i] - carry + (i < right.digits.size() ? right.digits[i] : 0);
-        carry = left.digits[i] < 0;
-        if (carry != 0)
-            res.digits[i] = left.digits[i] + BigInteger::BASE;
+    for (uint64_t i = 0; i < left_size; ++i) {
+        if (i >= right_size)
+            col_digit = left.digits[i] - carry;
+        else
+            col_digit = left.digits[i] - right.digits[i] - carry;
+        carry = 0;
+        if (col_digit < 0) {
+            col_digit = col_digit + left.BASE;
+            carry = 1;
+        }
+        res.digits.push_back(col_digit);
     }
+    if (carry == 1)
+        cout << "Error" << endl;
 
     res.RemoveLeadZeros();
-    return left;
+    return res;
 }
 
 const BigInteger operator*(const BigInteger& left, const BigInteger& right) {

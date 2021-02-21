@@ -120,14 +120,28 @@ namespace UnitTest2
 			BigInteger b2(s2);
 			Assert::AreEqual(BigToString(b1 + b2), s3);
 		}
+	};
+	TEST_CLASS(UnitTest2)
+	{
+	public:
+		TEST_METHOD(TestMethod1)
+		{
+			std::string s1 = "5111224176";
+			std::string s2 = "4576565422";
+			std::string s3 = "534658754";
+			BigInteger b1(s1);
+			BigInteger b2(s2);
+			Assert::AreEqual(BigToString(b1 - b2), s3);
+		}
+
 		TEST_METHOD(TestMethod2)
 		{
-			std::string s1 = "4576565422";
-			std::string s2 = "534658754";
-			std::string s3 = "5111224176";
+			std::string s1 = "5111224176";
+			std::string s2 = "4576565422";
+			std::string s3 = "534658754";
 			longNumber b1(s1);
 			longNumber b2(s2);
-			Assert::AreEqual(bigToString(b1 + b2), s3);
+			Assert::AreEqual(bigToString(b1 - b2), s3);
 		}
 	};
 }
