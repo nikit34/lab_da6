@@ -10,8 +10,8 @@ class BigInteger {
 public:
     BigInteger();
     BigInteger(string& str);
-    BigInteger(int64_t& digits);
-    BigInteger(uint64_t& digits);
+    BigInteger(int64_t digits);
+    BigInteger(uint64_t digits);
     BigInteger(int);
     friend ostream& operator<<(ostream& os, const BigInteger& bi);
     uint64_t operator[](uint64_t i) const;
@@ -99,7 +99,7 @@ BigInteger::BigInteger(string& str) {
     this->RemoveLeadZeros();
 } // 1- 576565422 4 2- 
 
-BigInteger::BigInteger(int64_t& digits) {
+BigInteger::BigInteger(int64_t digits) {
     if (digits < 0) {
         this->is_negative = true;
         digits = -digits;
@@ -114,7 +114,7 @@ BigInteger::BigInteger(int64_t& digits) {
     } while (digits != 0);
 }
 
-BigInteger::BigInteger(uint64_t& digits) {
+BigInteger::BigInteger(uint64_t digits) {
     this->is_negative = false;
     do {
         this->digits.push_back(digits % BigInteger::BASE);
@@ -323,7 +323,8 @@ const BigInteger operator/(const BigInteger& left, const BigInteger& right) {
         digit_result = 0, l = 0, r = BigInteger::BASE;
         while (l <= r) {
             m = (l + r) / 2;
-            tmp = base * m;
+            BigInteger big_m(m);
+            tmp = base * big_m;
             if (tmp <= current) {
                 digit_result = m;
                 l = m + 1;
