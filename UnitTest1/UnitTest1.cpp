@@ -83,6 +83,122 @@ namespace UnitTest1
 	TEST_CLASS(UnitTest3)
 	{
 	public:
+		TEST_METHOD(TestMethod1)
+		{
+			std::string s1 = "453465";
+			std::string s2 = "543543245";
+			BigInteger t1(s1);
+			BigInteger t2(s2);
+			Assert::IsTrue(t1 <= t2);
+		}
+		TEST_METHOD(TestMethod2)
+		{
+			std::string s1 = "453465";
+			std::string s2 = "-543543245";
+			BigInteger t1(s1);
+			BigInteger t2(s2);
+			Assert::IsFalse(t1 <= t2);
+		}
+		TEST_METHOD(TestMethod3)
+		{
+			std::string s1 = "453465";
+			std::string s2 = "453465";
+			BigInteger t1(s1);
+			BigInteger t2(s2);
+			Assert::IsTrue(t1 <= t2);
+		}
+	};
+
+	TEST_CLASS(UnitTest4)
+	{
+	public:
+		TEST_METHOD(TestMethod1)
+		{
+			std::string s1 = "543543245";
+			std::string s2 = "453465";
+			BigInteger t1(s1);
+			BigInteger t2(s2);
+			Assert::IsTrue(t1 >= t2);
+		}
+		TEST_METHOD(TestMethod2)
+		{
+			std::string s1 = "-543543245";
+			std::string s2 = "453465";
+			BigInteger t1(s1);
+			BigInteger t2(s2);
+			Assert::IsFalse(t1 >= t2);
+		}
+		TEST_METHOD(TestMethod3)
+		{
+			std::string s1 = "543543245";
+			std::string s2 = "543543245";
+			BigInteger t1(s1);
+			BigInteger t2(s2);
+			Assert::IsTrue(t1 >= t2);
+		}
+	};
+
+	TEST_CLASS(UnitTest5)
+	{
+	public:
+		TEST_METHOD(TestMethod1)
+		{
+			std::string s1 = "453465";
+			std::string s2 = "543543245";
+			BigInteger t1(s1);
+			BigInteger t2(s2);
+			Assert::IsTrue(t1 < t2);
+		}
+		TEST_METHOD(TestMethod2)
+		{
+			std::string s1 = "453465";
+			std::string s2 = "-543543245";
+			BigInteger t1(s1);
+			BigInteger t2(s2);
+			Assert::IsFalse(t1 < t2);
+		}
+		TEST_METHOD(TestMethod3)
+		{
+			std::string s1 = "453465";
+			std::string s2 = "453465";
+			BigInteger t1(s1);
+			BigInteger t2(s2);
+			Assert::IsFalse(t1 < t2);
+		}
+	};
+
+	TEST_CLASS(UnitTest6)
+	{
+	public:
+		TEST_METHOD(TestMethod1)
+		{
+			std::string s1 = "543543245";
+			std::string s2 = "453465";
+			BigInteger t1(s1);
+			BigInteger t2(s2);
+			Assert::IsTrue(t1 > t2);
+		}
+		TEST_METHOD(TestMethod2)
+		{
+			std::string s1 = "-543543245";
+			std::string s2 = "453465";
+			BigInteger t1(s1);
+			BigInteger t2(s2);
+			Assert::IsFalse(t1 > t2);
+		}
+		TEST_METHOD(TestMethod3)
+		{
+			std::string s1 = "453465";
+			std::string s2 = "453465";
+			BigInteger t1(s1);
+			BigInteger t2(s2);
+			Assert::IsFalse(t1 > t2);
+		}
+	};
+
+	TEST_CLASS(UnitTest7)
+	{
+	public:
 
 		TEST_METHOD(TestMethod1)
 		{
