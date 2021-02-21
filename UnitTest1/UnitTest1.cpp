@@ -174,6 +174,15 @@ namespace UnitTest2
 			BigInteger b2(s2);
 			Assert::AreEqual(BigToString(b1 + b2), s3);
 		}
+		TEST_METHOD(TestMethod3)
+		{
+			std::string s1 = "0000045054";
+			std::string s2 = "100658754";
+			std::string s3 = "100703808";
+			BigInteger b1(s1);
+			BigInteger b2(s2);
+			Assert::AreEqual(BigToString(b1 + b2), s3);
+		}
 	};
 	TEST_CLASS(UnitTest2)
 	{
@@ -223,6 +232,15 @@ namespace UnitTest2
 			std::string s1 = "526";
 			std::string s2 = "4565422";
 			std::string s3 = "2401411972"; // мои реквизиты )
+			BigInteger b1(s1);
+			BigInteger b2(s2);
+			Assert::AreEqual(BigToString(b1 * b2), s3);
+		}
+		TEST_METHOD(TestMethod3)
+		{
+			std::string s1 = "00004520";
+			std::string s2 = "4002";
+			std::string s3 = "18089040";
 			BigInteger b1(s1);
 			BigInteger b2(s2);
 			Assert::AreEqual(BigToString(b1 * b2), s3);

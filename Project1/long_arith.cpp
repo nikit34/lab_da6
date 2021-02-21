@@ -283,16 +283,31 @@ ostream& resultOperation(ostream& out, const BigInteger& left, const BigInteger&
         out << (left + right);
         break;
     case '-':
-        out << (left - right);
+        try {
+            out << (left - right);
+        }
+        catch (logic_error& e) {
+            out << e.what();
+        }
         break; 
     case '*':
         out << (left * right);
         break;
     case '/':
-        out << (left / right);
+        try {
+            out << (left / right);
+        }
+        catch (logic_error& e) {
+            out << e.what();
+        }
         break;
     case '^':
-        out << (left ^ right);
+        try {
+            out << (left ^ right);
+        }
+        catch (logic_error& e) {
+            out << e.what();
+        }
         break;
     case '<':
         out << ((left < right) ? "true" : "false");
