@@ -35,7 +35,7 @@ public:
     friend string BigToString(const BigInteger& b);
 
 private:
-    static const uint64_t BASE = 100000;
+    static const uint64_t BASE = 1000000000;
     bool is_negative;
     std::vector<uint64_t> digits;
 };
