@@ -7,13 +7,12 @@
 #include <cmath>
 
 
-static const uint64_t BASE = 100000;
+static const uint32_t BASE = 100000;
 
 class BigInteger {
 public:
     BigInteger() = default;
     BigInteger(const std::string& str);
-    BigInteger(uint64_t digits);
     friend std::ostream& operator<<(std::ostream& os, const BigInteger& bi);
     void RemoveLeadZeros();
     bool operator ==(const BigInteger& right) const;
@@ -33,7 +32,7 @@ public:
     friend std::string BigToString(const BigInteger& b);
 
 private:
-    std::vector<uint64_t> digits;
+    std::vector<uint32_t> digits;
 };
 
 std::ostream& operator <<(std::ostream& os, const BigInteger& b) {
@@ -41,8 +40,8 @@ std::ostream& operator <<(std::ostream& os, const BigInteger& b) {
         os << 0;
     else {
         os << b.digits.back();
-        uint64_t size = static_cast<uint64_t>(b.digits.size());
-        for (int64_t i = size - 2; i >= 0; --i)
+        uint32_t size = static_cast<uint32_t>(b.digits.size());
+        for (int32_t i = size - 2; i >= 0; --i)
             os << std::setw(5) << std::setfill('0') << b.digits[i];
     }
     return os;
@@ -53,30 +52,23 @@ std::string BigToString(const BigInteger& b) {
     if (b.digits.empty()) 
         out = "0";        
     else {
-        uint64_t size = b.digits.size();
-        for (int64_t i = size - 1; i >= 0; --i)
+        uint32_t size = b.digits.size();
+        for (int32_t i = size - 1; i >= 0; --i)
             out.append(std::to_string(b.digits[i]));
     }
     return out;
 }
 
 BigInteger::BigInteger(const std::string& str) {
-    for (int64_t i = str.length() - 1; i >= 0; i = i - 5) {
+    for (int i = str.length() - 1; i >= 0; i = i - 5) {
         if (i < 5) {
-            this->digits.push_back(atoll(str.substr(0, i + 1).c_str()));  // atoll string -> uint64_t
+            this->digits.push_back(atoll(str.substr(0, i + 1).c_str()));  // atoll string -> uint32_t
         }
         else {
             this->digits.push_back(atoll(str.substr(i - 4, 5).c_str()));
         }
     }
     this->RemoveLeadZeros();
-}
-
-BigInteger::BigInteger(uint64_t digits) {
-    do {
-        this->digits.push_back(digits % BASE);
-        digits = digits / BASE;
-    } while (digits != 0);
 }
 
 void BigInteger::RemoveLeadZeros() {
@@ -105,8 +97,8 @@ bool BigInteger::operator<=(const BigInteger& right) const {
 }
 
 const int16_t BigInteger::Compare(const BigInteger& right) const {
-    uint64_t left_size = static_cast<uint64_t>(this->digits.size());
-    uint64_t right_size = static_cast<uint64_t>(right.digits.size());
+    uint32_t left_size = static_cast<uint32_t>(this->digits.size());
+    uint32_t right_size = static_cast<uint32_t>(right.digits.size());
 
     if (left_size < right_size)
         return 1;
@@ -122,14 +114,14 @@ const int16_t BigInteger::Compare(const BigInteger& right) const {
 }
 
 const BigInteger operator+(const BigInteger& left, const BigInteger& right) {
-    uint64_t left_size = static_cast<uint64_t>(left.digits.size());
-    uint64_t right_size = static_cast<uint64_t>(right.digits.size());
-    uint64_t carry = 0;
-    uint64_t max_size_integer = std::max(left_size, right_size);
-    uint64_t col_digit;
+    uint32_t left_size = static_cast<uint32_t>(left.digits.size());
+    uint32_t right_size = static_cast<uint32_t>(right.digits.size());
+    uint32_t carry = 0;
+    uint32_t max_size_integer = std::max(left_size, right_size);
+    uint32_t col_digit;
     BigInteger res;
 
-    for (uint64_t i = 0; i < max_size_integer; ++i) {
+    for (uint32_t i = 0; i < max_size_integer; ++i) {
         if (left_size <= i)
             col_digit = right.digits[i] + carry;
         else if (right_size <= i)
@@ -145,17 +137,17 @@ const BigInteger operator+(const BigInteger& left, const BigInteger& right) {
 }
 
 const BigInteger operator-(const BigInteger& left, const BigInteger& right) {
-    uint64_t left_size = static_cast<uint64_t>(left.digits.size());
-    uint64_t right_size = static_cast<uint64_t>(right.digits.size());
+    uint32_t left_size = static_cast<uint32_t>(left.digits.size());
+    uint32_t right_size = static_cast<uint32_t>(right.digits.size());
 
     if(left_size < right_size)
         throw std::logic_error("Error");
 
     uint16_t carry = 0;
-    int64_t col_digit = 0;
+    int32_t col_digit = 0;
     BigInteger res;
 
-    for (uint64_t i = 0; i < left_size; ++i) {
+    for (uint32_t i = 0; i < left_size; ++i) {
         if (i >= right_size)
             col_digit = left.digits[i] - carry;
         else
@@ -177,12 +169,12 @@ const BigInteger operator-(const BigInteger& left, const BigInteger& right) {
 }
 
 const BigInteger BigInteger::MultShort(const BigInteger& other) const {
-    uint64_t carry = 0;
-    uint64_t col_digit;
-    uint64_t size = static_cast<uint64_t>(this->digits.size());
+    uint32_t carry = 0;
+    uint32_t col_digit;
+    uint32_t size = static_cast<uint32_t>(this->digits.size());
     BigInteger result;
 
-    for (uint64_t i = 0; i < size; ++i) {
+    for (uint32_t i = 0; i < size; ++i) {
         col_digit = this->digits[i] * other.digits[0] + carry;
         result.digits.push_back(col_digit % BASE);
         carry = col_digit / BASE;
@@ -195,19 +187,19 @@ const BigInteger BigInteger::MultShort(const BigInteger& other) const {
 }
 
 const BigInteger operator*(const BigInteger& left, const BigInteger& right) {
-    uint64_t right_size = static_cast<uint64_t>(right.digits.size());
+    uint32_t right_size = static_cast<uint32_t>(right.digits.size());
     if (right_size == 1)
         return right.MultShort(left);
 
-    uint64_t left_size = static_cast<uint64_t>(left.digits.size());
+    uint32_t left_size = static_cast<uint32_t>(left.digits.size());
     if (left_size == 1)
         return left.MultShort(right);
 
     BigInteger result;
     result.digits.resize(left_size + right_size);
-    uint64_t carry;
-    uint64_t col_digit;
-    uint64_t i, j;
+    uint32_t carry;
+    uint32_t col_digit;
+    uint32_t i, j;
     for (i = 0; i < right_size; ++i) {
         carry = 0;
         for (j = 0; j < left_size || carry != 0; ++j) {
@@ -227,30 +219,30 @@ void BigInteger::ShiftRight() {
     }
 
     this->digits.push_back(this->digits[this->digits.size() - 1]);
-    uint64_t size = this->digits.size();
-    for (uint64_t i = size - 2; i > 0; --i)
+    uint32_t size = this->digits.size();
+    for (uint32_t i = size - 2; i > 0; --i)
         this->digits[i] = this->digits[i - 1];
     this->digits[0] = 0;
 }
 
 const BigInteger operator/(const BigInteger& left, const BigInteger& right) {
-    if (right == BigInteger(0))
+    if (right == BigInteger("0"))
         throw std::logic_error("Error");
 
     BigInteger base = right;
     BigInteger result, current, tmp;
-    uint64_t size = static_cast<uint64_t>(left.digits.size());
+    uint32_t size = static_cast<uint32_t>(left.digits.size());
     result.digits.resize(size);
-    uint64_t digit_result, l, r, m;
+    uint32_t digit_result, l, r, m;
 
-    for (int64_t i = size - 1; i >= 0; --i) {
+    for (int32_t i = size - 1; i >= 0; --i) {
         current.ShiftRight();
         current.digits[0] = left.digits[i];
         current.RemoveLeadZeros();
         digit_result = 0, l = 0, r = BASE;
         while (l <= r) {
             m = (l + r) / 2;
-            tmp = base.MultShort(BigInteger(m));
+            tmp = base.MultShort(BigInteger(std::to_string(m)));
             if (tmp <= current) {
                 digit_result = m;
                 l = m + 1;
@@ -259,28 +251,28 @@ const BigInteger operator/(const BigInteger& left, const BigInteger& right) {
                 r = m - 1;
         }
         result.digits[i] = digit_result;
-        current = current - base.MultShort(BigInteger(digit_result));
+        current = current - base.MultShort(BigInteger(std::to_string(digit_result)));
     }
     result.RemoveLeadZeros();
     return result;
 }
 
 const BigInteger operator^(const BigInteger& b, const BigInteger& n) {
-    if (n == BigInteger(0)){
-        if (b == BigInteger(0))
+    if (n == BigInteger("0")){
+        if (b == BigInteger("0"))
             throw std::logic_error("Error");
         else
-            return BigInteger(1);
+            return BigInteger("1");
     }
-    if (b == BigInteger(1) || n == BigInteger(1))
+    if (b == BigInteger("1") || n == BigInteger("1"))
         return b;
 
     if (n.digits[0] % 2 == 0) {
-        BigInteger x = b ^ (n / BigInteger(2));
+        BigInteger x = b ^ (n / BigInteger("2"));
         return x * x;
     }
     else {
-        return IPow(b, (n - BigInteger(1)) * b);
+        return IPow(b, (n - BigInteger("1")) * b);
     }
 }
 
