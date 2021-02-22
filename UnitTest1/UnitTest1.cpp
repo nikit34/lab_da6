@@ -182,9 +182,9 @@ namespace UnitTest2
 	public:
 		TEST_METHOD(TestMethod1)
 		{
-			std::string s1 = "5226";
-			std::string s2 = "4565422";
-			std::string s3 = "23858895372";
+			std::string s1 = "26";
+			std::string s2 = "422";
+			std::string s3 = "10972";
 			BigInteger b1(s1);
 			BigInteger b2(s2);
 			Assert::AreEqual(BigToString(b1 * b2), s3);
@@ -192,8 +192,8 @@ namespace UnitTest2
 		TEST_METHOD(TestMethod2)
 		{
 			std::string s1 = "526";
-			std::string s2 = "4565422";
-			std::string s3 = "2401411972"; // мои реквизиты )
+			std::string s2 = "542";
+			std::string s3 = "285092"; // мои реквизиты )
 			BigInteger b1(s1);
 			BigInteger b2(s2);
 			Assert::AreEqual(BigToString(b1 * b2), s3);
