@@ -27,26 +27,6 @@ namespace UnitTest1
 		}
 	};
 
-	TEST_CLASS(UnitTest2)
-	{
-	public:
-		TEST_METHOD(TestMethod1)
-		{
-			std::string s1 = "453465";
-			std::string s2 = "543543245";
-			BigInteger t1(s1);
-			BigInteger t2(s2);
-			Assert::IsTrue(t1 != t2);
-		}
-		TEST_METHOD(TestMethod2)
-		{
-			std::string s1 = "453465";
-			BigInteger t1(s1);
-			BigInteger t2(s1);
-			Assert::IsFalse(t1 != t2);
-		}
-	};
-
 	TEST_CLASS(UnitTest3)
 	{
 	public:
@@ -158,9 +138,9 @@ namespace UnitTest2
 		}
 		TEST_METHOD(TestMethod3)
 		{
-			std::string s1 = "0000045054";
-			std::string s2 = "100658754";
-			std::string s3 = "100703808";
+			std::string s1 = "00040054";
+			std::string s2 = "10658754";
+			std::string s3 = "10698808";
 			BigInteger b1(s1);
 			BigInteger b2(s2);
 			Assert::AreEqual(BigToString(b1 + b2), s3);
@@ -265,8 +245,8 @@ namespace UnitTest2
 		TEST_METHOD(TestMethod1)
 		{
 			std::string s1 = "21";
-			std::string s2 = "16";
-			std::string s3 = "1430568690241985328321";
+			std::string s2 = "0003";
+			std::string s3 = "9261";
 			BigInteger b1(s1);
 			BigInteger b2(s2);
 			Assert::AreEqual(BigToString(b1 ^ b2), s3);
