@@ -7,7 +7,7 @@
 #include <cmath>
 
 
-static const uint64_t BASE = 100000;
+static const unsigned long long BASE = 100000;
 
 class BigInteger {
 public:
@@ -20,7 +20,7 @@ public:
     bool operator >(const BigInteger& right) const;
     bool operator >=(const BigInteger& right) const;
     bool operator <=(const BigInteger& right) const;
-    const int16_t Compare(const BigInteger& right) const;
+    const int Compare(const BigInteger& right) const;
     friend const BigInteger operator +(const  BigInteger& left, const BigInteger& right);
     friend const BigInteger operator -(const BigInteger& left, const BigInteger& right);
     friend const BigInteger operator *(const BigInteger& left, const BigInteger& right);
@@ -33,18 +33,14 @@ public:
     friend std::string BigToString(const BigInteger& b);
 
 private:
-    std::vector<uint64_t> digits;
+    std::vector<unsigned long long> digits;
 };
 
 std::ostream& operator <<(std::ostream& os, const BigInteger& b) {
-    if (b.digits.empty())
-        os << 0;
-    else {
-        os << b.digits.back();
-        uint64_t size = static_cast<uint64_t>(b.digits.size());
-        for (int64_t i = size - 2; i >= 0; --i)
-            os << std::setw(5) << std::setfill('0') << b.digits[i];
-    }
+    os << (b.digits.empty()) ? 0 : b.digits.back();
+    unsigned long long size = static_cast<unsigned long long>(b.digits.size());
+    for (long long i = size - 2; i >= 0; --i)
+        os << std::setw(5) << std::setfill('0') << b.digits[i];
     return os;
 }
 
@@ -53,18 +49,18 @@ std::string BigToString(const BigInteger& b) {
     if (b.digits.empty()) 
         out = "0";        
     else {
-        uint64_t size = b.digits.size();
-        for (int64_t i = size - 1; i >= 0; --i)
+        unsigned long long size = b.digits.size();
+        for (long long i = size - 1; i >= 0; --i)
             out.append(std::to_string(b.digits[i]));
     }
     return out;
 }
 
 BigInteger::BigInteger(const std::string& str) {
-    uint64_t size = str.length();
-    for (int64_t i = size - 1; i >= 0; i = i - 5) {
+    unsigned long long size = str.length();
+    for (long long i = size - 1; i >= 0; i = i - 5) {
         if (i < 5) {
-            this->digits.push_back(atoll(str.substr(0, i + 1).c_str()));  // atoll string -> uint64_t
+            this->digits.push_back(atoll(str.substr(0, i + 1).c_str()));  // atoll string -> unsigned long long
         }
         else {
             this->digits.push_back(atoll(str.substr(i - 4, 5).c_str()));
@@ -98,9 +94,9 @@ bool BigInteger::operator<=(const BigInteger& right) const {
     return ((this->Compare(right) == 1 || this->Compare(right) == 0) ? true : false);
 }
 
-const int16_t BigInteger::Compare(const BigInteger& right) const {
-    uint64_t left_size = static_cast<uint64_t>(this->digits.size());
-    uint64_t right_size = static_cast<uint64_t>(right.digits.size());
+const int BigInteger::Compare(const BigInteger& right) const {
+    unsigned long long left_size = static_cast<unsigned long long>(this->digits.size());
+    unsigned long long right_size = static_cast<unsigned long long>(right.digits.size());
 
     if (left_size < right_size)
         return 1;
@@ -116,14 +112,14 @@ const int16_t BigInteger::Compare(const BigInteger& right) const {
 }
 
 const BigInteger operator+(const BigInteger& left, const BigInteger& right) {
-    uint64_t left_size = static_cast<uint64_t>(left.digits.size());
-    uint64_t right_size = static_cast<uint64_t>(right.digits.size());
-    uint64_t carry = 0;
-    uint64_t max_size_integer = std::max(left_size, right_size);
-    uint64_t col_digit;
+    unsigned long long left_size = static_cast<unsigned long long>(left.digits.size());
+    unsigned long long right_size = static_cast<unsigned long long>(right.digits.size());
+    unsigned long long carry = 0;
+    unsigned long long max_size_integer = std::max(left_size, right_size);
+    unsigned long long col_digit;
     BigInteger res;
 
-    for (uint64_t i = 0; i < max_size_integer; ++i) {
+    for (unsigned long long i = 0; i < max_size_integer; ++i) {
         if (left_size <= i)
             col_digit = right.digits[i] + carry;
         else if (right_size <= i)
@@ -139,17 +135,17 @@ const BigInteger operator+(const BigInteger& left, const BigInteger& right) {
 }
 
 const BigInteger operator-(const BigInteger& left, const BigInteger& right) {
-    uint64_t left_size = static_cast<uint64_t>(left.digits.size());
-    uint64_t right_size = static_cast<uint64_t>(right.digits.size());
+    unsigned long long left_size = static_cast<unsigned long long>(left.digits.size());
+    unsigned long long right_size = static_cast<unsigned long long>(right.digits.size());
 
     if(left_size < right_size)
         throw std::logic_error("Error");
 
-    uint16_t carry = 0;
-    int64_t col_digit = 0;
+    int carry = 0;
+    long long col_digit = 0;
     BigInteger res;
 
-    for (uint64_t i = 0; i < left_size; ++i) {
+    for (unsigned long long i = 0; i < left_size; ++i) {
         if (i >= right_size)
             col_digit = left.digits[i] - carry;
         else
@@ -171,12 +167,12 @@ const BigInteger operator-(const BigInteger& left, const BigInteger& right) {
 }
 
 const BigInteger BigInteger::MultShort(const BigInteger& other) const {
-    uint64_t carry = 0;
-    uint64_t col_digit;
-    uint64_t size = static_cast<uint64_t>(this->digits.size());
+    unsigned long long carry = 0;
+    unsigned long long col_digit;
+    unsigned long long size = static_cast<unsigned long long>(this->digits.size());
     BigInteger result;
 
-    for (uint64_t i = 0; i < size; ++i) {
+    for (unsigned long long i = 0; i < size; ++i) {
         col_digit = this->digits[i] * other.digits[0] + carry;
         result.digits.push_back(col_digit % BASE);
         carry = col_digit / BASE;
@@ -189,14 +185,14 @@ const BigInteger BigInteger::MultShort(const BigInteger& other) const {
 }
 
 const BigInteger MultLong(const BigInteger& left, const BigInteger& right) {
-    uint64_t left_size = static_cast<uint64_t>(left.digits.size());
-    uint64_t right_size = static_cast<uint64_t>(right.digits.size());
+    unsigned long long left_size = static_cast<unsigned long long>(left.digits.size());
+    unsigned long long right_size = static_cast<unsigned long long>(right.digits.size());
 
     BigInteger result;
     result.digits.resize(left_size + right_size);
-    uint64_t carry;
-    uint64_t col_digit;
-    uint64_t i, j;
+    unsigned long long carry;
+    unsigned long long col_digit;
+    unsigned long long i, j;
     for (i = 0; i < right_size; ++i) {
         carry = 0;
         for (j = 0; j < left_size || carry != 0; ++j) {
@@ -210,11 +206,11 @@ const BigInteger MultLong(const BigInteger& left, const BigInteger& right) {
 }
 
 const BigInteger operator*(const BigInteger& left, const BigInteger& right) {
-    uint64_t right_size = static_cast<uint64_t>(right.digits.size());
+    unsigned long long right_size = static_cast<unsigned long long>(right.digits.size());
     if (right_size == 1)
         return right.MultShort(left);
 
-    uint64_t left_size = static_cast<uint64_t>(left.digits.size());
+    unsigned long long left_size = static_cast<unsigned long long>(left.digits.size());
     if (left_size == 1)
         return left.MultShort(right);
 
@@ -230,8 +226,8 @@ void BigInteger::ShiftRight() {
     }
 
     this->digits.push_back(this->digits[this->digits.size() - 1]);
-    uint64_t size = this->digits.size();
-    for (uint64_t i = size - 2; i > 0; --i)
+    unsigned long long size = this->digits.size();
+    for (unsigned long long i = size - 2; i > 0; --i)
         this->digits[i] = this->digits[i - 1];
     this->digits[0] = 0;
 }
@@ -242,11 +238,11 @@ const BigInteger operator/(const BigInteger& left, const BigInteger& right) {
 
     BigInteger base = right;
     BigInteger result, current, tmp;
-    uint64_t size = left.digits.size();
+    unsigned long long size = left.digits.size();
     result.digits.resize(size);
-    uint64_t digit_result, l, r, m;
+    unsigned long long digit_result, l, r, m;
 
-    for (int64_t i = size - 1; i >= 0; --i) {
+    for (long long i = size - 1; i >= 0; --i) {
         current.ShiftRight();
         current.digits[0] = left.digits[i];
         current.RemoveLeadZeros();
