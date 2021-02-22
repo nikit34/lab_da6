@@ -7,7 +7,7 @@
 #include <cmath>
 
 
-static const unsigned long long BASE = 100000;
+static const int BASE = 100000;
 
 class BigInteger {
 public:
@@ -30,37 +30,24 @@ public:
     const BigInteger MultShort(const BigInteger& other) const;
     friend const BigInteger MultLong(const BigInteger& left, const BigInteger& right);
     void ShiftRight();
-    friend std::string BigToString(const BigInteger& b);
 
 private:
-    std::vector<unsigned long long> digits;
+    std::vector<int> digits;
 };
 
 std::ostream& operator <<(std::ostream& os, const BigInteger& b) {
     os << (b.digits.empty()) ? 0 : b.digits.back();
-    unsigned long long size = static_cast<unsigned long long>(b.digits.size());
-    for (long long i = size - 2; i >= 0; --i)
+    int size = b.digits.size();
+    for (int i = size - 2; i >= 0; --i)
         os << std::setw(5) << std::setfill('0') << b.digits[i];
     return os;
 }
 
-std::string BigToString(const BigInteger& b) {
-    std::string out;
-    if (b.digits.empty()) 
-        out = "0";        
-    else {
-        unsigned long long size = b.digits.size();
-        for (long long i = size - 1; i >= 0; --i)
-            out.append(std::to_string(b.digits[i]));
-    }
-    return out;
-}
-
 BigInteger::BigInteger(const std::string& str) {
-    unsigned long long size = str.length();
-    for (long long i = size - 1; i >= 0; i = i - 5) {
+    int size = str.length();
+    for (int i = size - 1; i >= 0; i = i - 5) {
         if (i < 5) {
-            this->digits.push_back(atoll(str.substr(0, i + 1).c_str()));  // atoll string -> unsigned long long
+            this->digits.push_back(atoll(str.substr(0, i + 1).c_str()));  // atoll string -> int
         }
         else {
             this->digits.push_back(atoll(str.substr(i - 4, 5).c_str()));
@@ -95,8 +82,8 @@ bool BigInteger::operator<=(const BigInteger& right) const {
 }
 
 const int BigInteger::Compare(const BigInteger& right) const {
-    unsigned long long left_size = static_cast<unsigned long long>(this->digits.size());
-    unsigned long long right_size = static_cast<unsigned long long>(right.digits.size());
+    int left_size = static_cast<int>(this->digits.size());
+    int right_size = static_cast<int>(right.digits.size());
 
     if (left_size < right_size)
         return 1;
@@ -112,14 +99,14 @@ const int BigInteger::Compare(const BigInteger& right) const {
 }
 
 const BigInteger operator+(const BigInteger& left, const BigInteger& right) {
-    unsigned long long left_size = static_cast<unsigned long long>(left.digits.size());
-    unsigned long long right_size = static_cast<unsigned long long>(right.digits.size());
-    unsigned long long carry = 0;
-    unsigned long long max_size_integer = std::max(left_size, right_size);
-    unsigned long long col_digit;
+    int left_size = static_cast<int>(left.digits.size());
+    int right_size = static_cast<int>(right.digits.size());
+    int carry = 0;
+    int max_size_integer = std::max(left_size, right_size);
+    int col_digit;
     BigInteger res;
 
-    for (unsigned long long i = 0; i < max_size_integer; ++i) {
+    for (int i = 0; i < max_size_integer; ++i) {
         if (left_size <= i)
             col_digit = right.digits[i] + carry;
         else if (right_size <= i)
@@ -135,8 +122,8 @@ const BigInteger operator+(const BigInteger& left, const BigInteger& right) {
 }
 
 const BigInteger operator-(const BigInteger& left, const BigInteger& right) {
-    unsigned long long left_size = static_cast<unsigned long long>(left.digits.size());
-    unsigned long long right_size = static_cast<unsigned long long>(right.digits.size());
+    int left_size = static_cast<int>(left.digits.size());
+    int right_size = static_cast<int>(right.digits.size());
 
     if(left_size < right_size)
         throw std::logic_error("Error");
@@ -145,7 +132,7 @@ const BigInteger operator-(const BigInteger& left, const BigInteger& right) {
     long long col_digit = 0;
     BigInteger res;
 
-    for (unsigned long long i = 0; i < left_size; ++i) {
+    for (int i = 0; i < left_size; ++i) {
         if (i >= right_size)
             col_digit = left.digits[i] - carry;
         else
@@ -167,12 +154,12 @@ const BigInteger operator-(const BigInteger& left, const BigInteger& right) {
 }
 
 const BigInteger BigInteger::MultShort(const BigInteger& other) const {
-    unsigned long long carry = 0;
-    unsigned long long col_digit;
-    unsigned long long size = static_cast<unsigned long long>(this->digits.size());
+    int carry = 0;
+    int col_digit;
+    int size = static_cast<int>(this->digits.size());
     BigInteger result;
 
-    for (unsigned long long i = 0; i < size; ++i) {
+    for (int i = 0; i < size; ++i) {
         col_digit = this->digits[i] * other.digits[0] + carry;
         result.digits.push_back(col_digit % BASE);
         carry = col_digit / BASE;
@@ -185,14 +172,14 @@ const BigInteger BigInteger::MultShort(const BigInteger& other) const {
 }
 
 const BigInteger MultLong(const BigInteger& left, const BigInteger& right) {
-    unsigned long long left_size = static_cast<unsigned long long>(left.digits.size());
-    unsigned long long right_size = static_cast<unsigned long long>(right.digits.size());
+    int left_size = static_cast<int>(left.digits.size());
+    int right_size = static_cast<int>(right.digits.size());
 
     BigInteger result;
     result.digits.resize(left_size + right_size);
-    unsigned long long carry;
-    unsigned long long col_digit;
-    unsigned long long i, j;
+    int carry;
+    int col_digit;
+    int i, j;
     for (i = 0; i < right_size; ++i) {
         carry = 0;
         for (j = 0; j < left_size || carry != 0; ++j) {
@@ -206,11 +193,11 @@ const BigInteger MultLong(const BigInteger& left, const BigInteger& right) {
 }
 
 const BigInteger operator*(const BigInteger& left, const BigInteger& right) {
-    unsigned long long right_size = static_cast<unsigned long long>(right.digits.size());
+    int right_size = static_cast<int>(right.digits.size());
     if (right_size == 1)
         return right.MultShort(left);
 
-    unsigned long long left_size = static_cast<unsigned long long>(left.digits.size());
+    int left_size = static_cast<int>(left.digits.size());
     if (left_size == 1)
         return left.MultShort(right);
 
@@ -226,8 +213,8 @@ void BigInteger::ShiftRight() {
     }
 
     this->digits.push_back(this->digits[this->digits.size() - 1]);
-    unsigned long long size = this->digits.size();
-    for (unsigned long long i = size - 2; i > 0; --i)
+    int size = this->digits.size();
+    for (int i = size - 2; i > 0; --i)
         this->digits[i] = this->digits[i - 1];
     this->digits[0] = 0;
 }
@@ -238,9 +225,9 @@ const BigInteger operator/(const BigInteger& left, const BigInteger& right) {
 
     BigInteger base = right;
     BigInteger result, current, tmp;
-    unsigned long long size = left.digits.size();
+    int size = left.digits.size();
     result.digits.resize(size);
-    unsigned long long digit_result, l, r, m;
+    int digit_result, l, r, m;
 
     for (long long i = size - 1; i >= 0; --i) {
         current.ShiftRight();
